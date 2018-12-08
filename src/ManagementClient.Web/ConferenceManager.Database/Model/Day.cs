@@ -29,7 +29,7 @@ namespace ConferenceManager.Database.Model
 
 		public ICollection<TimeSlot> TimeSlots { get; set; }
 
-		public static void Create(Conference conference)
+		public static void CreateForConference(Conference conference)
 		{
 			using (var context = CMContext.NewContext())
 			{

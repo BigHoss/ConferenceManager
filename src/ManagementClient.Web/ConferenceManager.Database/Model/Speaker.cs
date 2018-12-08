@@ -28,7 +28,7 @@ namespace ConferenceManager.Database.Model
 		public string Description { get; set; }
 
 		public int TimeSlotId { get; set; }
-		public TimeSlot TimeSlot { get; set; }
+		public ICollection<TimeSlot> TimeSlots { get; set; }
 
 		public void Delete()
 		{

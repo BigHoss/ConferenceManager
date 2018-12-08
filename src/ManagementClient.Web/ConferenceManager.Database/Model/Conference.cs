@@ -93,7 +93,7 @@
 					context.Add(conference);
 				}
 				context.SaveChanges();
-				Day.Create(conference);
+				Day.CreateForConference(conference);
 
 				return conference;
 			}
