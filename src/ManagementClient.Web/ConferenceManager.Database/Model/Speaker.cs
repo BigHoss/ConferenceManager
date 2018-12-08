@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace ConferenceManager.Database.Model
@@ -7,19 +8,6 @@ namespace ConferenceManager.Database.Model
 	using System.ComponentModel.DataAnnotations.Schema;
 	public class Speaker : IEntity
 	{
-		#region EntityProps
-		public int Id { get; set; }
-		public DateTime CreateDateTime { get; set; }
-		public string CreateUser { get; set; }
-		public DateTime UpdateDateTime { get; set; }
-		public string UpdateUserName { get; set; }
-		public int Updates { get; set; }
-		public DateTime DeleteDateTime { get; set; }
-		public string DeleteUserName { get; set; }
-		[NotMapped]
-		public bool IsDeleted => !string.IsNullOrEmpty(DeleteUserName) && (DeleteDateTime != DateTime.MinValue);
-		#endregion
-
 		public string Name { get; set; }
 		public string EMail { get; set; }
 
@@ -30,25 +18,25 @@ namespace ConferenceManager.Database.Model
 		public int TimeSlotId { get; set; }
 		public ICollection<TimeSlot> TimeSlots { get; set; }
 
-		public void Delete()
-		{
-			using (var context = CMContext.NewContext())
-			{
-				TimeSlot.Delete(this.TimeSlots);
-				context.Speakers.Remove(this);
-				context.SaveChanges();
-			}
-		}
+		#region EntityProps
+		public int Id { get; set; }
+		[DisplayName("Time Created")]
+		public DateTime CreateDateTime { get; set; }
+		[DisplayName("User Created")]
+		public string CreateUser { get; set; }
+		[DisplayName("Time Updated")]
+		public DateTime UpdateDateTime { get; set; }
+		[DisplayName("User Updated")]
+		public string UpdateUserName { get; set; }
+		[DisplayName("Times Updated")]
+		public int Updates { get; set; }
+		[DisplayName("Time Deleted")]
+		public DateTime DeleteDateTime { get; set; }
+		[DisplayName("User Deleted")]
+		public string DeleteUserName { get; set; }
+		[NotMapped]
+		public bool IsDeleted => !string.IsNullOrEmpty(DeleteUserName) && (DeleteDateTime != DateTime.MinValue);
+		#endregion
 
-		public static void Delete(ICollection<Speaker> speakers)
-		{
-			if (speakers.Any())
-			{
-				foreach (Speaker speaker in speakers)
-				{
-					speaker.Delete();
-				}
-			}
-		}
 	}
 }

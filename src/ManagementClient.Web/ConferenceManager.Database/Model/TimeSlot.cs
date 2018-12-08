@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace ConferenceManager.Database.Model
@@ -7,19 +8,6 @@ namespace ConferenceManager.Database.Model
 	using System.ComponentModel.DataAnnotations.Schema;
 	public class TimeSlot : IEntity
 	{
-		#region EntityProps
-		public int Id { get; set; }
-		public DateTime CreateDateTime { get; set; }
-		public string CreateUser { get; set; }
-		public DateTime UpdateDateTime { get; set; }
-		public string UpdateUserName { get; set; }
-		public int Updates { get; set; }
-		public DateTime DeleteDateTime { get; set; }
-		public string DeleteUserName { get; set; }
-		[NotMapped]
-		public bool IsDeleted => !string.IsNullOrEmpty(DeleteUserName) && (DeleteDateTime != DateTime.MinValue);
-		#endregion
-
 		public string Name { get; set; }
 
 		public DateTime StartTime { get; set; }
@@ -33,73 +21,24 @@ namespace ConferenceManager.Database.Model
 
 		public int SpeakerId { get; set; }
 		public Speaker Speaker { get; set; }
-
-		public static TimeSlot CreateUpdate(string name, Day day, Room room, Speaker speaker)
-		{
-			var timeSlot = GetByName(name);
-			if (timeSlot != null)
-			{
-				timeSlot.Day = day;
-				timeSlot.Room = room;
-				timeSlot.Speaker = speaker;
-			}
-			else
-			{
-				timeSlot = new TimeSlot
-				{
-					Name = name,
-					Day = day,
-					Room = room,
-					Speaker = speaker,
-				};
-			}
-
-			return CreateUpdate(timeSlot);
-		}
-
-		public static TimeSlot CreateUpdate(TimeSlot timeSlot)
-		{
-			using (var context = CMContext.NewContext())
-			{
-				if (context.TimeSlots.Any(x => x.Id == timeSlot.Id))
-				{
-					context.TimeSlots.Update(timeSlot);
-				}
-				else
-				{
-					context.TimeSlots.Add(timeSlot);
-				}
-
-				context.SaveChanges();
-			}
-
-			return timeSlot;
-		}
-
-		public static TimeSlot GetByName(string name)
-		{
-			using (var context = CMContext.NewContext())
-			{
-				return context.TimeSlots.FirstOrDefault(x => x.Name.Contains(name));
-			}
-		}
-
-		public void Delete()
-		{
-			using (var context = CMContext.NewContext())
-			{
-				context.Remove(this);
-				context.SaveChanges();
-			}
-		}
-
-		public static void Delete(ICollection<TimeSlot> timeSlots)
-		{
-			if (!timeSlots.Any()) return;
-			foreach (TimeSlot timeSlot in timeSlots)
-			{
-				timeSlot.Delete();
-			}
-		}
+		#region EntityProps
+		public int Id { get; set; }
+		[DisplayName("Time Created")]
+		public DateTime CreateDateTime { get; set; }
+		[DisplayName("User Created")]
+		public string CreateUser { get; set; }
+		[DisplayName("Time Updated")]
+		public DateTime UpdateDateTime { get; set; }
+		[DisplayName("User Updated")]
+		public string UpdateUserName { get; set; }
+		[DisplayName("Times Updated")]
+		public int Updates { get; set; }
+		[DisplayName("Time Deleted")]
+		public DateTime DeleteDateTime { get; set; }
+		[DisplayName("User Deleted")]
+		public string DeleteUserName { get; set; }
+		[NotMapped]
+		public bool IsDeleted => !string.IsNullOrEmpty(DeleteUserName) && (DeleteDateTime != DateTime.MinValue);
+		#endregion
 	}
 }

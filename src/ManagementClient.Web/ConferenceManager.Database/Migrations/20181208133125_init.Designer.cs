@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConferenceManager.Database.Migrations
 {
     [DbContext(typeof(CMContext))]
-    [Migration("20181208123442_added navigation props")]
-    partial class addednavigationprops
+    [Migration("20181208133125_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

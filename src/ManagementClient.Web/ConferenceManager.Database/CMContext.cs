@@ -2,6 +2,9 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace ConferenceManager.Database
 {
@@ -10,17 +13,16 @@ namespace ConferenceManager.Database
 
 	public class CMContext : DbContext
 	{
+		private readonly IHttpContextAccessor _httpContextAccessor;
 		public DbSet<Conference> Conferences { get; set; }
 		public DbSet<Day> Days { get; set; }
 		public DbSet<Speaker> Speakers { get; set; }
 		public DbSet<Room> Rooms { get; set; }
 		public DbSet<TimeSlot> TimeSlots { get; set; }
 
-		public static CMContext NewContext()
+		public CMContext(DbContextOptions<CMContext> options, IHttpContextAccessor httpContextAccessor) : base(options)
 		{
-			var context = new CMContext();
-			context.Database.Migrate();
-			return context;
+			_httpContextAccessor = httpContextAccessor;
 		}
 
 		static CMContext()
@@ -37,8 +39,8 @@ namespace ConferenceManager.Database
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			var databasePath = Path.Combine(Environment.CurrentDirectory, "conferenceManager.db");
-			optionsBuilder.UseSqlite($"Data Source={databasePath}");
+			var databasePath = Path.Combine(Environment.CurrentDirectory, "");
+			optionsBuilder.UseSqlite($"Data Source=conferenceManager.db");
 
 		}
 
@@ -53,30 +55,62 @@ namespace ConferenceManager.Database
 
 		public override int SaveChanges()
 		{
-			foreach (EntityEntry entityEntry in ChangeTracker.Entries())
-			{
-				IEntity entity = Mapper.Map<IEntity>(entityEntry.Entity);
+			OnBeforeSaveChanges();
 
-				switch (entityEntry.State)
+			return base.SaveChanges();
+		}
+
+		public override int SaveChanges(bool acceptAllChangesOnSuccess)
+		{
+			OnBeforeSaveChanges();
+			return base.SaveChanges(acceptAllChangesOnSuccess);
+		}
+
+		public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+		{
+			OnBeforeSaveChanges();
+			return base.SaveChangesAsync(cancellationToken);
+		}
+
+		public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
+		{
+			OnBeforeSaveChanges();
+			return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+		}
+
+		private void OnBeforeSaveChanges()
+		{
+			foreach (EntityEntry entry in ChangeTracker.Entries())
+			{
+				if (!(entry.Entity is IEntity entity)) continue;
+				switch (entry.State)
 				{
 					case EntityState.Deleted:
 						entity.DeleteDateTime = DateTime.UtcNow;
-						entity.DeleteUserName = Environment.UserName;
-						entityEntry.State = EntityState.Modified;
+						entity.DeleteUserName = GetCurrentUsername();
+						entry.State = EntityState.Modified;
 						break;
 					case EntityState.Modified:
-						entity.UpdateUserName = Environment.UserName;
+						entity.UpdateUserName = GetCurrentUsername();
 						entity.UpdateDateTime = DateTime.UtcNow;
 						entity.Updates++;
 						break;
 					case EntityState.Added:
-						entity.CreateUser = Environment.UserName;
+						entity.CreateUser = GetCurrentUsername();
 						entity.CreateDateTime = DateTime.UtcNow;
 						break;
 				}
 			}
+		}
 
-			return base.SaveChanges();
+		private string GetCurrentUsername()
+		{
+			var identityName = _httpContextAccessor.HttpContext.User.Identity.Name;
+			if (string.IsNullOrEmpty(identityName))
+			{
+				identityName = Environment.UserName;
+			}
+			return identityName;
 		}
 	}
 }

@@ -17,6 +17,7 @@ namespace ConferenceManager.Database.Migrations
                     CreateUser = table.Column<string>(nullable: true),
                     UpdateDateTime = table.Column<DateTime>(nullable: false),
                     UpdateUserName = table.Column<string>(nullable: true),
+                    Updates = table.Column<int>(nullable: false),
                     DeleteDateTime = table.Column<DateTime>(nullable: false),
                     DeleteUserName = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
@@ -38,6 +39,7 @@ namespace ConferenceManager.Database.Migrations
                     CreateUser = table.Column<string>(nullable: true),
                     UpdateDateTime = table.Column<DateTime>(nullable: false),
                     UpdateUserName = table.Column<string>(nullable: true),
+                    Updates = table.Column<int>(nullable: false),
                     DeleteDateTime = table.Column<DateTime>(nullable: false),
                     DeleteUserName = table.Column<string>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
@@ -64,10 +66,11 @@ namespace ConferenceManager.Database.Migrations
                     CreateUser = table.Column<string>(nullable: true),
                     UpdateDateTime = table.Column<DateTime>(nullable: false),
                     UpdateUserName = table.Column<string>(nullable: true),
+                    Updates = table.Column<int>(nullable: false),
                     DeleteDateTime = table.Column<DateTime>(nullable: false),
                     DeleteUserName = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
-                    ConferenceId = table.Column<int>(nullable: true)
+                    ConferenceId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,41 +79,6 @@ namespace ConferenceManager.Database.Migrations
                         name: "FK_Rooms_Conferences_ConferenceId",
                         column: x => x.ConferenceId,
                         principalTable: "Conferences",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TimeSlots",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    CreateDateTime = table.Column<DateTime>(nullable: false),
-                    CreateUser = table.Column<string>(nullable: true),
-                    UpdateDateTime = table.Column<DateTime>(nullable: false),
-                    UpdateUserName = table.Column<string>(nullable: true),
-                    DeleteDateTime = table.Column<DateTime>(nullable: false),
-                    DeleteUserName = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    StartTime = table.Column<DateTime>(nullable: false),
-                    EndTime = table.Column<DateTime>(nullable: false),
-                    DayId = table.Column<int>(nullable: false),
-                    RoomId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TimeSlots", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TimeSlots_Days_DayId",
-                        column: x => x.DayId,
-                        principalTable: "Days",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TimeSlots_Rooms_RoomId",
-                        column: x => x.RoomId,
-                        principalTable: "Rooms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -125,6 +93,7 @@ namespace ConferenceManager.Database.Migrations
                     CreateUser = table.Column<string>(nullable: true),
                     UpdateDateTime = table.Column<DateTime>(nullable: false),
                     UpdateUserName = table.Column<string>(nullable: true),
+                    Updates = table.Column<int>(nullable: false),
                     DeleteDateTime = table.Column<DateTime>(nullable: false),
                     DeleteUserName = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
@@ -143,10 +112,47 @@ namespace ConferenceManager.Database.Migrations
                         principalTable: "Conferences",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TimeSlots",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    CreateDateTime = table.Column<DateTime>(nullable: false),
+                    CreateUser = table.Column<string>(nullable: true),
+                    UpdateDateTime = table.Column<DateTime>(nullable: false),
+                    UpdateUserName = table.Column<string>(nullable: true),
+                    Updates = table.Column<int>(nullable: false),
+                    DeleteDateTime = table.Column<DateTime>(nullable: false),
+                    DeleteUserName = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    StartTime = table.Column<DateTime>(nullable: false),
+                    EndTime = table.Column<DateTime>(nullable: false),
+                    DayId = table.Column<int>(nullable: false),
+                    RoomId = table.Column<int>(nullable: false),
+                    SpeakerId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TimeSlots", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Speakers_TimeSlots_TimeSlotId",
-                        column: x => x.TimeSlotId,
-                        principalTable: "TimeSlots",
+                        name: "FK_TimeSlots_Days_DayId",
+                        column: x => x.DayId,
+                        principalTable: "Days",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TimeSlots_Rooms_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Rooms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TimeSlots_Speakers_SpeakerId",
+                        column: x => x.SpeakerId,
+                        principalTable: "Speakers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -167,11 +173,6 @@ namespace ConferenceManager.Database.Migrations
                 column: "ConferenceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Speakers_TimeSlotId",
-                table: "Speakers",
-                column: "TimeSlotId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TimeSlots_DayId",
                 table: "TimeSlots",
                 column: "DayId");
@@ -180,13 +181,15 @@ namespace ConferenceManager.Database.Migrations
                 name: "IX_TimeSlots_RoomId",
                 table: "TimeSlots",
                 column: "RoomId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TimeSlots_SpeakerId",
+                table: "TimeSlots",
+                column: "SpeakerId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Speakers");
-
             migrationBuilder.DropTable(
                 name: "TimeSlots");
 
@@ -195,6 +198,9 @@ namespace ConferenceManager.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "Rooms");
+
+            migrationBuilder.DropTable(
+                name: "Speakers");
 
             migrationBuilder.DropTable(
                 name: "Conferences");
