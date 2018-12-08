@@ -5,7 +5,10 @@ VisualStudioVersion = 16.0.28315.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceManager.RaspiClient", "ConferenceManager.RaspiClient\ConferenceManager.RaspiClient.csproj", "{ACC967FA-A42B-4E0D-A017-27CB2FF98F26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceManager.Database", "ConferenceManager.Database\ConferenceManager.Database\ConferenceManager.Database.csproj", "{D40BB916-B7E3-493B-A8D1-5C5140C06A52}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D3FC04C3-50B1-4C69-BD7D-023ED77F403F}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\README.md = ..\..\..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,26 +50,6 @@ Global
 		{ACC967FA-A42B-4E0D-A017-27CB2FF98F26}.Release|x86.ActiveCfg = Release|x86
 		{ACC967FA-A42B-4E0D-A017-27CB2FF98F26}.Release|x86.Build.0 = Release|x86
 		{ACC967FA-A42B-4E0D-A017-27CB2FF98F26}.Release|x86.Deploy.0 = Release|x86
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Debug|ARM.Build.0 = Debug|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Debug|x64.Build.0 = Debug|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Debug|x86.Build.0 = Debug|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Release|ARM.ActiveCfg = Release|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Release|ARM.Build.0 = Release|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Release|ARM64.Build.0 = Release|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Release|x64.ActiveCfg = Release|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Release|x64.Build.0 = Release|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Release|x86.ActiveCfg = Release|Any CPU
-		{D40BB916-B7E3-493B-A8D1-5C5140C06A52}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
