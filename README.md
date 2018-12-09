@@ -3,7 +3,7 @@
 
 ## Server
 Windows 10 PC
-Web App Running a Sqlite DB
+Web App Running an Sqlite DB
 
 ## Client
 Windows IOT Core running on a Raspberry Pi 3 B
