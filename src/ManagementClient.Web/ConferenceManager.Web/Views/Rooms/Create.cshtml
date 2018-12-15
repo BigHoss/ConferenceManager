@@ -1,0 +1,81 @@
+﻿@model ConferenceManager.Database.Model.Room
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create</title>
+</head>
+<body>
+
+<h4>Room</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConferenceId" class="control-label"></label>
+                <select asp-for="ConferenceId" class ="form-control" asp-items="ViewBag.ConferenceId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreateDateTime" class="control-label"></label>
+                <input asp-for="CreateDateTime" class="form-control" />
+                <span asp-validation-for="CreateDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreateUser" class="control-label"></label>
+                <input asp-for="CreateUser" class="form-control" />
+                <span asp-validation-for="CreateUser" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdateDateTime" class="control-label"></label>
+                <input asp-for="UpdateDateTime" class="form-control" />
+                <span asp-validation-for="UpdateDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdateUserName" class="control-label"></label>
+                <input asp-for="UpdateUserName" class="form-control" />
+                <span asp-validation-for="UpdateUserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Updates" class="control-label"></label>
+                <input asp-for="Updates" class="form-control" />
+                <span asp-validation-for="Updates" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeleteDateTime" class="control-label"></label>
+                <input asp-for="DeleteDateTime" class="form-control" />
+                <span asp-validation-for="DeleteDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeleteUserName" class="control-label"></label>
+                <input asp-for="DeleteUserName" class="form-control" />
+                <span asp-validation-for="DeleteUserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+</body>
+</html>

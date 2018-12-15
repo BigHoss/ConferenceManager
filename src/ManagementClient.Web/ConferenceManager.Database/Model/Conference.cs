@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.EntityFrameworkCore.Internal;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,6 +16,42 @@ namespace ConferenceManager.Database.Model
 		[DisplayName("End Time")]
 		[DataType(DataType.Date)]
 		public DateTime EndTime { get; set; }
+
+		[NotMapped]
+		public DateTime[] DateRange
+		{
+			get
+			{
+				var dateTimes = new DateTime[2];
+				if (StartTime != DateTime.MinValue)
+				{
+					dateTimes[0] = StartTime;
+				}
+
+				if (EndTime != DateTime.MinValue)
+				{
+					dateTimes[1] = EndTime;
+				}
+
+				return dateTimes;
+			}
+			set
+			{
+				if (value != null && value.Any())
+				{
+					if (value.Length > 1)
+					{
+						StartTime = value[0];
+						EndTime = value[1];
+					}
+
+					if (value.Length == 1)
+					{
+						StartTime = value[0];
+					}
+				}
+			}
+		}
 
 		public ICollection<Day> Days { get; set; }
 		public ICollection<Room> Rooms { get; set; }

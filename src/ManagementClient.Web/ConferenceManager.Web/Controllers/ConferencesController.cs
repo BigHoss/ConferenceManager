@@ -44,7 +44,15 @@ namespace ConferenceManager.Web.Controllers
 		// GET: Conferences/Create
 		public IActionResult Create()
 		{
-			return View();
+			var conference = new Conference
+			{
+				DateRange = new DateTime[]
+				{
+					DateTime.Now,
+					DateTime.Now.AddDays(1)
+				}
+			};
+			return View(conference);
 		}
 
 		// POST: Conferences/Create
@@ -52,21 +60,22 @@ namespace ConferenceManager.Web.Controllers
 		// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("Id,CreateDateTime,CreateUser,UpdateDateTime,UpdateUserName,Updates,DeleteDateTime,DeleteUserName,Name,StartTime,EndTime")] Conference conference)
+		public async Task<IActionResult> Create([Bind("Id,DateRange")] Conference conference)
 		{
 			if (ModelState.IsValid)
 			{
-				for (int i = 0; i < (conference.EndTime - conference.StartTime).TotalDays; i++)
+				var totalDays = (conference.DateRange[1] - conference.DateRange[0]).TotalDays;
+				for (int i = 0; i < totalDays; i++)
 				{
 					_context.Days.Add(new Day
 					{
 						Conference = conference,
-						Date = conference.StartTime.AddDays(i)
+						Date = conference.DateRange[0].AddDays(i)
 					});
 				}
 				_context.Add(conference);
 				await _context.SaveChangesAsync();
-				return RedirectToAction(nameof(Index));
+				return RedirectToAction(nameof(Details), new { id = conference.Id });
 			}
 			return View(conference);
 		}
@@ -84,6 +93,10 @@ namespace ConferenceManager.Web.Controllers
 			{
 				return NotFound();
 			}
+
+			ViewBag.StartTime = conference.StartTime;
+			ViewBag.EndTime = conference.EndTime;
+
 			return View(conference);
 		}
 
@@ -92,7 +105,7 @@ namespace ConferenceManager.Web.Controllers
 		// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, [Bind("Id,CreateDateTime,CreateUser,UpdateDateTime,UpdateUserName,Updates,DeleteDateTime,DeleteUserName,Name,StartTime,EndTime")] Conference conference)
+		public async Task<IActionResult> Edit(int id, [Bind("Id,DateRange,StartTime,EndTime")] Conference conference)
 		{
 			if (id != conference.Id)
 			{
@@ -103,27 +116,37 @@ namespace ConferenceManager.Web.Controllers
 			{
 				try
 				{
-					var orderedDays = conference.Days?.OrderBy(x => x.Date).ToList();
+					var orderedDays = await _context.Days.Where(x => x.ConferenceId == conference.Id).OrderBy(x => x.Date).ToListAsync();
 					int currentDaysAmount = orderedDays.Count;
 					int neededDaysAmount = Convert.ToInt32((conference.EndTime - conference.StartTime).TotalDays);
 
-					for (int i = 0; i < neededDaysAmount; i++)
-					{
-						Day day;
-						if (i + 1 > currentDaysAmount)
+						for (int i = 0; i < neededDaysAmount; i++)
 						{
-							day = new Day
+							Day day;
+							if (i + 1 > currentDaysAmount)
 							{
-								Date = conference.StartTime.AddDays(i)
-							};
-							conference.Days?.Add(day);
+								if (conference.StartTime != null)
+								{
+									day = new Day
+									{
+										Date = conference.StartTime.AddDays(i)
+									};
+									conference.Days?.Add(day);
+								}
+
+							}
+							else
+							{
+								day = orderedDays[i];
+								if (conference.StartTime != null)
+								{
+									day.Date = conference.StartTime.AddDays(i);
+								}
+
+								_context.Days.Update(day);
+							}
 						}
-						else
-						{
-							day = orderedDays[i];
-							day.Date = conference.StartTime.AddDays(i);
-						}
-					}
+
 
 					_context.Update(conference);
 					await _context.SaveChangesAsync();
@@ -139,7 +162,7 @@ namespace ConferenceManager.Web.Controllers
 						throw;
 					}
 				}
-				return RedirectToAction(nameof(Index));
+				return RedirectToAction(nameof(Details), new { id = conference.Id });
 			}
 			return View(conference);
 		}
